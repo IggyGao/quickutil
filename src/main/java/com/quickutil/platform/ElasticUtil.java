@@ -815,6 +815,29 @@ public class ElasticUtil {
     }
 
     /**
+     * ES管理：删除指定index
+     *
+     * @param indices
+     * @return 返回结果
+     */
+    public boolean deleteIndex(List<String> indices) {
+        String deleteIndexUrl = String.format(getIndex, host, String.join(",", indices));
+        HttpResponse response = null;
+        try {
+            response = HttpUtil.httpDelete(deleteIndexUrl);
+            if (200 != response.getStatusLine().getStatusCode()) {
+                LOGGER.error("delete index fail, response: " + getEntity(response));
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("delete index error", e);
+            return false;
+        }
+    }
+
+
+    /**
      * ES管理：获取 index 的 mapping
      *
      * @param index
